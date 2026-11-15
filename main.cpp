@@ -1,5 +1,4 @@
 // This is only the skeleton of the code, changes will be made along the way :)
-// Note: Parang pareho lang yung vector and arrays, pero mas flexible lang yung vector
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -17,7 +16,8 @@ class squishyData {
         int itemQuantity;
         double itemPrice;
     public:
-        squishyData(int id, string type, string name, int quantity, double price);
+        squishyData(int id, string type, string name, int quantity, double price) :
+            itemID(id), itemType(type), itemName(name), itemQuantity(quantity), itemPrice(price) {}
 
         int getID() const {
             return itemID;
@@ -107,7 +107,7 @@ bool readFile(string filename, vector<squishyData>& items) {
     return true;
 }
 
-bool updateFile(string filename, vector<squishyData>& items) {
+bool updateFile(string filename, const vector<squishyData>& items) {
     fstream file(filename, ios::out);
     if (!file.is_open()) {
         cerr << "Error: Could not open file '" << filename << "'." << '\n';
@@ -136,3 +136,13 @@ void viewInventory();
 // Function Prototypes (Pick One)
 void searchByID();
 void searchByName();
+
+// Main Function
+int main() {
+    /*
+    FLOW:
+    Display Menu -> User Input -> Call chosen menu UI function -> User Input / Execute
+    (Loop until user exits)
+    */
+    return 0;
+}
