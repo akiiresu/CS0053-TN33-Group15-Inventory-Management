@@ -8,14 +8,7 @@
 
 using namespace std;
 
-// Function Prototypes
-bool createFile(string filename);
-bool appendFile(string filename, squishyData& squishyData);
-bool readFile(string filename, vector<squishyData>& squishyData);
-bool updateFile(string filename, vector<squishyData>& squishyData);
-bool retrieveFileData(string filename, string line);
-
-// OOP - Achi
+// OOP
 class squishyData {
     private:
         int itemID;
@@ -26,19 +19,19 @@ class squishyData {
     public:
         squishyData(int id, string type, string name, int quantity, double price);
 
-        int getID() {
+        int getID() const {
             return itemID;
         }
-        string getType() {
+        string getType() const {
             return itemType;
         }
-        string getName() {
+        string getName() const {
             return itemName;
         }
-        int getQuantity() {
+        int getQuantity() const {
             return itemQuantity;
         }
-        double getPrice() {
+        double getPrice() const {
             return itemPrice;
         }
 
@@ -49,11 +42,21 @@ class squishyData {
         void setPrice(double price) {
             itemPrice = price;
         }
+
+        void setType(string type) {
+            itemType = type;
+        }
 };
 
-// File Handling - Achi
+// Function Prototypes
+bool createFile(string filename);
+bool appendFile(string filename, const squishyData& item);
+bool readFile(string filename, vector<squishyData>& items);
+bool updateFile(string filename, const vector<squishyData>& items);
+
+// File Handling
 bool createFile(string filename) {
-    fstream file(filename, ios::out);
+    ofstream file(filename);
     if (!file.is_open()) {
         cerr << "Error: Could not create file '" << filename << "'." << '\n';
         return false;
@@ -62,19 +65,19 @@ bool createFile(string filename) {
     return true;
 }
 
-bool appendFile(string filename, squishyData& squishyData) {
-    fstream file(filename, ios::app);
+bool appendFile(string filename, const squishyData& item) {
+    ofstream file(filename, ios::app);
     if (!file.is_open()) {
         cerr << "Error: Could not open file '" << filename << "' for appending." << '\n';
         return false;
     }
-    file << squishyData.getID() << "," << squishyData.getType() << "," << squishyData.getName() << "," 
-         << squishyData.getQuantity() << "," << squishyData.getPrice() << '\n';
+    file << item.getID() << "," << item.getType() << "," << item.getName() << ","
+         << item.getQuantity() << "," << item.getPrice() << '\n';
     file.close();
     return true;
 }
-// Incomplete
-bool readFile(string filename, vector<squishyData>& squishyData) {
+
+bool readFile(string filename, vector<squishyData>& items) {
     fstream file(filename, ios::in);
     if (!file.is_open()) {
         cerr << "Error: Could not open file '" << filename << "'." << '\n';
@@ -83,54 +86,40 @@ bool readFile(string filename, vector<squishyData>& squishyData) {
         return false;
     }
 
+    items.clear();
+    string line;
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+        stringstream ss(line);
+        string itemIDStr, itemType, itemName, itemQuantityStr, itemPriceStr;
+        getline(ss, itemIDStr, ',');
+        getline(ss, itemType, ',');
+        getline(ss, itemName, ',');
+        getline(ss, itemQuantityStr, ',');
+        getline(ss, itemPriceStr, ',');
+
+        try {
+            items.push_back(squishyData(stoi(itemIDStr), itemType, itemName, stoi(itemQuantityStr), stod(itemPriceStr)));
+        } catch (...) {
+            cerr << "Error found in file: Line " << line << ". Skipping this line...\n";
+        }
+    }
+    return true;
 }
 
-// Not sure how to do this pa but I will experiment
-bool updateFile(string filename, vector<squishyData>& squishyData) {
+bool updateFile(string filename, vector<squishyData>& items) {
     fstream file(filename, ios::out);
     if (!file.is_open()) {
         cerr << "Error: Could not open file '" << filename << "'." << '\n';
         return false;
     }
 
-}
-
-// If there's an existing file, this will take the data in the file and store it into the vector
-bool retrieveFileData(vector<squishyData>& squishyData, string filename) {
-    fstream file(filename, ios::in);
-    if (!file.is_open()) {
-        cerr << "Error: Could not open file '" << filename << "'." << '\n';
-        return false;
+    for (const squishyData& item : items) {
+        file << item.getID() << "," << item.getType() << "," << item.getName() << ","
+             << item.getQuantity() << "," << item.getPrice() << '\n';
     }
-
-    vector<string> lines; // For storing yung lines na na-read sa file
-    string line; // For storing yung current line na na-read sa file
-
-    /*
-    Explanation for tomorrow programmer me:
-    Basically, let's say this .txt file contains these lines:
-    FEU
-    UST
-    NU
-
-    We will read each line, first line is FEU.
-    string line -> the current line -> FEU
-    vector<string> lines -> where the current line (string line) being read is stored -> FEU
-    Then, we will read the next line, which is UST. Repeat.
-    */
-
-    // Read each line from the file, this basically means na as long as may line sa file,
-    // it will get each line and store it sa vector
-    while (getline(file, line)) {
-        stringstream ss(line);
-        
-        while(getline(ss, line, ',')) {
-            // Split the line by commas and store each part in the vector
-            lines.push_back(line);
-        }
-
-        // Will end it here muna, I'll continue this another time
-    }
+    file.close();
+    return true;
 }
 
 // User Interface and Functions

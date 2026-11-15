@@ -55,7 +55,6 @@ Programming Language: C++
 * Append File - `appendFile()`
 * Read File - `readFile()`
 * Update File - `updateFile()`
-* Retrieve Data - `retrieveData()`
 
 **Variables**
 * Item ID - `itemID`
