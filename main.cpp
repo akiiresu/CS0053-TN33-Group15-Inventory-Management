@@ -130,7 +130,7 @@ bool updateFile(string filename, const vector<squishyData>& items) {
 // =============================
 // Function Prototypes
 void displayMenu();
-void addItem();
+void addItem(string filename, vector<squishyData>& inventory);
 void updateItem();
 void deleteItem();
 void viewInventory();
@@ -148,7 +148,63 @@ void displayMenu() {
     cout << "=============================" << '\n';
 }
 
-void addItem()       { cout << "[Add Item] Not implemented yet." << '\n'; }
+void addItem(string filename, vector<squishyData>& inventory){ 
+    string id, type, name;
+    int quantity;
+    double price;
+
+    cout << "\n--- Add Item ---" << '\n';
+
+    // Get unique ID
+    while (true) {
+        cout << "Enter Item ID: ";
+        getline(cin, id);
+
+        bool exists = false;
+        for (const squishyData& item : inventory) {
+            if (item.getID() == id) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (id.empty()) {
+            cout << "ID cannot be empty." << '\n';
+        } else if (exists) {
+            cout << "ID already exists. Enter a different ID." << '\n';
+        } else {
+            break;
+        }
+    }
+
+    cout << "Enter Item Type: ";
+    getline(cin, type);
+
+    cout << "Enter Item Name: ";
+    getline(cin, name);
+
+    cout << "Enter Item Quantity: ";
+    while (!(cin >> quantity) || quantity < 0) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid input. Enter a valid quantity: ";
+    }
+
+    cout << "Enter Item Price: ";
+    while (!(cin >> price) || price < 0) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid input. Enter a valid price: ";
+    }
+    cin.ignore(10000, '\n');
+
+    squishyData newItem(id, type, name, quantity, price);
+
+    if (appendFile(filename, newItem)) {
+        inventory.push_back(newItem);
+        cout << "Item added successfully!" << '\n';
+    }
+}
 void updateItem()    { cout << "[Update Item] Not implemented yet." << '\n'; }
 void deleteItem()    { cout << "[Delete Item] Not implemented yet." << '\n'; }
 void viewInventory() { cout << "[View Inventory] Not implemented yet." << '\n'; }
@@ -188,7 +244,7 @@ int main() {
         }
 
         switch (choice) {
-            case 1: addItem();       break;
+            case 1: addItem(FILENAME, inventory);       break;
             case 2: updateItem();    break;
             case 3: deleteItem();    break;
             case 4: viewInventory(); break;
