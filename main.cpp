@@ -10,16 +10,16 @@ using namespace std;
 // OOP
 class squishyData {
     private:
-        int itemID;
+        string itemID;
         string itemType;
         string itemName;
         int itemQuantity;
         double itemPrice;
     public:
-        squishyData(int id, string type, string name, int quantity, double price) :
+        squishyData(string id, string type, string name, int quantity, double price) :
             itemID(id), itemType(type), itemName(name), itemQuantity(quantity), itemPrice(price) {}
 
-        int getID() const {
+        string getID() const {
             return itemID;
         }
         string getType() const {
@@ -33,6 +33,10 @@ class squishyData {
         }
         double getPrice() const {
             return itemPrice;
+        }
+
+        void setID(string id) {
+            itemID = id;
         }
 
         void setQuantity(int quantity) {
@@ -99,7 +103,7 @@ bool readFile(string filename, vector<squishyData>& items) {
         getline(ss, itemPriceStr, ',');
 
         try {
-            items.push_back(squishyData(stoi(itemIDStr), itemType, itemName, stoi(itemQuantityStr), stod(itemPriceStr)));
+            items.push_back(squishyData(itemIDStr, itemType, itemName, stoi(itemQuantityStr), stod(itemPriceStr)));
         } catch (...) {
             cerr << "Error found in file: Line " << line << ". Skipping this line...\n";
         }
