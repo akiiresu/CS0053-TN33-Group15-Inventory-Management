@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iomanip>
 
 using namespace std;
 
@@ -133,7 +134,7 @@ void displayMenu();
 void addItem(string filename, vector<squishyData>& inventory);
 void updateItem();
 void deleteItem();
-void viewInventory();
+void viewInventory(const vector<squishyData>& inventory);
 
 void displayMenu() {
     cout << "\n=============================" << '\n';
@@ -207,7 +208,32 @@ void addItem(string filename, vector<squishyData>& inventory){
 }
 void updateItem()    { cout << "[Update Item] Not implemented yet." << '\n'; }
 void deleteItem()    { cout << "[Delete Item] Not implemented yet." << '\n'; }
-void viewInventory() { cout << "[View Inventory] Not implemented yet." << '\n'; }
+void viewInventory(const vector<squishyData>& inventory) { 
+    cout << "\n--- Squishy Inventory ---" << '\n';
+
+    if (inventory.empty()) {
+        cout << "Inventory is empty." << '\n';
+        return;
+    }
+
+    cout << "------------------------------------------------------------------------------------------------" << '\n';
+    cout << left  << setw(12) << "ID"
+         << left  << setw(20) << "Type"
+         << left  << setw(40) << "Name"
+         << right << setw(10) << "Quantity"
+         << right << setw(12) << "Price" << '\n';
+    cout << "------------------------------------------------------------------------------------------------" << '\n';
+
+    cout << fixed << setprecision(2);
+    for (const squishyData& item : inventory) {
+        cout << left  << setw(12) << item.getID()
+             << left  << setw(20) << item.getType()
+             << left  << setw(40) << item.getName()
+             << right << setw(10) << item.getQuantity()
+             << right << setw(12) << item.getPrice() << '\n';
+    }
+    cout << "------------------------------------------------------------------------------------------------" << '\n';
+}
 
 // Search Engine
 // =============================
@@ -247,7 +273,7 @@ int main() {
             case 1: addItem(FILENAME, inventory);       break;
             case 2: updateItem();    break;
             case 3: deleteItem();    break;
-            case 4: viewInventory(); break;
+            case 4: viewInventory(inventory); break;
             case 5: searchByID();    break;
             case 6: cout << "Goodbye!" << '\n'; break;
             default: cout << "Invalid choice. Please enter a number from 1 to 6." << '\n';
