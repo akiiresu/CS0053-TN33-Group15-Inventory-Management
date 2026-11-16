@@ -135,11 +135,31 @@ void updateItem();
 void deleteItem();
 void viewInventory();
 
+void displayMenu() {
+    cout << "\n=============================" << '\n';
+    cout << "Squishy Inventory Management" << '\n';
+    cout << "=============================" << '\n';
+    cout << "1. Add Item" << '\n';
+    cout << "2. Update Item" << '\n';
+    cout << "3. Delete Item" << '\n';
+    cout << "4. View Inventory" << '\n';
+    cout << "5. Search Item by ID" << '\n';
+    cout << "6. Exit" << '\n';
+    cout << "=============================" << '\n';
+}
+
+void addItem()       { cout << "[Add Item] Not implemented yet." << '\n'; }
+void updateItem()    { cout << "[Update Item] Not implemented yet." << '\n'; }
+void deleteItem()    { cout << "[Delete Item] Not implemented yet." << '\n'; }
+void viewInventory() { cout << "[View Inventory] Not implemented yet." << '\n'; }
+
 // Search Engine
 // =============================
 // Function Prototypes (Pick One)
 void searchByID();
 void searchByName();
+
+void searchByID()    { cout << "[Search by ID] Not implemented yet." << '\n'; }
 
 // Main Function
 int main() {
@@ -148,5 +168,35 @@ int main() {
     Display Menu -> User Input -> Call chosen menu UI function -> User Input / Execute
     (Loop until user exits)
     */
+    const string FILENAME = "inventory.txt";
+    vector<squishyData> inventory;
+
+    readFile(FILENAME, inventory);
+
+    int choice = 0;
+    do {
+        displayMenu();
+        cout << "Enter your choice: ";
+
+        if (!(cin >> choice)) {
+            // Non-number typed: clear the error and throw away the bad input
+            cin.clear();
+            cin.ignore(10000, '\n');
+            choice = 0;
+            cout << "Invalid input. Please enter a number from 1 to 6." << '\n';
+            continue;
+        }
+
+        switch (choice) {
+            case 1: addItem();       break;
+            case 2: updateItem();    break;
+            case 3: deleteItem();    break;
+            case 4: viewInventory(); break;
+            case 5: searchByID();    break;
+            case 6: cout << "Goodbye!" << '\n'; break;
+            default: cout << "Invalid choice. Please enter a number from 1 to 6." << '\n';
+        }
+    } while (choice != 6);
+
     return 0;
 }
