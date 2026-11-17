@@ -143,8 +143,8 @@ bool updateFile(string filename, const vector<squishyData>& items) {
 // Function Prototypes
 void displayMenu();
 void addItem(string filename, vector<squishyData>& inventory);
-void updateItem();
-void deleteItem();
+void updateItem(string filename, vector<squishyData>& inventory);
+void deleteItem(string filename, vector<squishyData>& inventory);
 void viewInventory(const vector<squishyData>& inventory);
 
 void displayMenu() {
