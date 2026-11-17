@@ -226,8 +226,6 @@ void updateItem(string filename, vector<squishyData>& inventory) {
     }
 
     string id;
-    cin.clear();
-    cin.ignore(10000, '\n');
     cout << "\n--- Update Item ---" << '\n';
     cout << "Enter Item ID to update: ";
     getline(cin, id);
