@@ -4,7 +4,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <cctype> // for character conversion
+#include <iomanip>
+#include <cctype>
 
 using namespace std;
 
@@ -55,11 +56,11 @@ class squishyData {
 
 struct squishyInventory {
     vector<squishyData> defaultItems = {
-        squishyData("101", "Gel", "Cat Squishy", 15, 55.75),
-        squishyData("102", "Bead", "Bunny Squishy", 8, 45.00),
-        squishyData("103", "Food", "Dumpling Squishy", 25, 120.50),
-        squishyData("104", "Plush", "Unicorn Squishy", 12, 95.75),
-        squishyData("105", "Mesh", "Cactus Squishy", 30, 44.75)
+        squishyData("NJ101", "Maltose", "Cat Squishy", 15, 55.75),
+        squishyData("NJ102", "Coconut Oil", "Bunny Squishy", 8, 45.00),
+        squishyData("NJ103", "Crunchy", "Dumpling Squishy", 25, 120.50),
+        squishyData("NJ104", "Maltose", "Unicorn Squishy", 12, 95.75),
+        squishyData("NJ105", "Vaseline", "Cactus Squishy", 20, 75.00)
     };
 };
 
@@ -68,7 +69,7 @@ bool createFile(string filename);
 bool appendFile(string filename, const squishyData& item);
 bool readFile(string filename, vector<squishyData>& items);
 bool updateFile(string filename, const vector<squishyData>& items);
-void searchByID (const vector<squishyData>& items);
+void searchByID(const vector<squishyData>& items);
 
 // File Handling
 bool createFile(string filename) {
@@ -141,11 +142,110 @@ bool updateFile(string filename, const vector<squishyData>& items) {
 // User Interface and Functions
 // =============================
 // Function Prototypes
-/*void displayMenu();
-void addItem();
+void displayMenu();
+void addItem(string filename, vector<squishyData>& inventory);
 void updateItem();
 void deleteItem();
-void viewInventory();*/
+void viewInventory(const vector<squishyData>& inventory);
+
+void displayMenu() {
+    cout << "\n=============================" << '\n';
+    cout << "Squishy Inventory Management" << '\n';
+    cout << "=============================" << '\n';
+    cout << "1. Add Item" << '\n';
+    cout << "2. Update Item" << '\n';
+    cout << "3. Delete Item" << '\n';
+    cout << "4. View Inventory" << '\n';
+    cout << "5. Search Item by ID" << '\n';
+    cout << "6. Exit" << '\n';
+    cout << "=============================" << '\n';
+}
+
+void addItem(string filename, vector<squishyData>& inventory){ 
+    string id, type, name;
+    int quantity;
+    double price;
+
+    cout << "\n--- Add Item ---" << '\n';
+
+    // Get unique ID
+    while (true) {
+        cout << "Enter Item ID: ";
+        getline(cin, id);
+
+        bool exists = false;
+        for (const squishyData& item : inventory) {
+            if (item.getID() == id) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (id.empty()) {
+            cout << "ID cannot be empty." << '\n';
+        } else if (exists) {
+            cout << "ID already exists. Enter a different ID." << '\n';
+        } else {
+            break;
+        }
+    }
+
+    cout << "Enter Item Type: ";
+    getline(cin, type);
+
+    cout << "Enter Item Name: ";
+    getline(cin, name);
+
+    cout << "Enter Item Quantity: ";
+    while (!(cin >> quantity) || quantity < 0) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid input. Enter a valid quantity: ";
+    }
+
+    cout << "Enter Item Price: ";
+    while (!(cin >> price) || price < 0) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Invalid input. Enter a valid price: ";
+    }
+    cin.ignore(10000, '\n');
+
+    squishyData newItem(id, type, name, quantity, price);
+
+    if (appendFile(filename, newItem)) {
+        inventory.push_back(newItem);
+        cout << "Item added successfully!" << '\n';
+    }
+}
+void updateItem()    { cout << "[Update Item] Not implemented yet." << '\n'; }
+void deleteItem()    { cout << "[Delete Item] Not implemented yet." << '\n'; }
+void viewInventory(const vector<squishyData>& inventory) { 
+    cout << "\n--- Squishy Inventory ---" << '\n';
+
+    if (inventory.empty()) {
+        cout << "Inventory is empty." << '\n';
+        return;
+    }
+
+    cout << "------------------------------------------------------------------------------------------------" << '\n';
+    cout << left  << setw(12) << "ID"
+         << left  << setw(20) << "Type"
+         << left  << setw(40) << "Name"
+         << right << setw(10) << "Quantity"
+         << right << setw(12) << "Price" << '\n';
+    cout << "------------------------------------------------------------------------------------------------" << '\n';
+
+    cout << fixed << setprecision(2);
+    for (const squishyData& item : inventory) {
+        cout << left  << setw(12) << item.getID()
+             << left  << setw(20) << item.getType()
+             << left  << setw(40) << item.getName()
+             << right << setw(10) << item.getQuantity()
+             << right << setw(12) << item.getPrice() << '\n';
+    }
+    cout << "------------------------------------------------------------------------------------------------" << '\n';
+}
 
 // Search Engine
 // =============================
@@ -173,7 +273,6 @@ void searchByID(const vector<squishyData>& items) {
                 break;
             }
         }
-
         if (foundID) {
             while (true) {
                 cout << '\n' << "Would you like to search for another item? [Y/N]: ";
@@ -193,7 +292,7 @@ void searchByID(const vector<squishyData>& items) {
             }
         } else {
             cout << '\n' << "Error: Item with ID " << searchIDInput << " not found in inventory." << endl;
-
+            
             while (true) {
                 cout << '\n' << "Try again? [Y/N]: ";
                 cin >> searchChoice;
@@ -216,16 +315,40 @@ void searchByID(const vector<squishyData>& items) {
 
 // Main Function
 int main() {
-    string filename = "inventory.txt";
-    vector <squishyData> items;
+    /*
+    FLOW:
+    Display Menu -> User Input -> Call chosen menu UI function -> User Input / Execute
+    (Loop until user exits)
+    */
+    const string FILENAME = "inventory.txt";
+    vector<squishyData> inventory;
 
-    if (!readFile(filename, items)) {
-        squishyInventory initialStock;
-        items = initialStock.defaultItems;
-        updateFile(filename, items);
-    }
+    readFile(FILENAME, inventory);
 
-    searchByID(items);
+    int choice = 0;
+    do {
+        displayMenu();
+        cout << "Enter your choice: ";
+
+        if (!(cin >> choice)) {
+            // Non-number typed: clear the error and throw away the bad input
+            cin.clear();
+            cin.ignore(10000, '\n');
+            choice = 0;
+            cout << "Invalid input. Please enter a number from 1 to 6." << '\n';
+            continue;
+        }
+
+        switch (choice) {
+            case 1: addItem(FILENAME, inventory);       break;
+            case 2: updateItem();    break;
+            case 3: deleteItem();    break;
+            case 4: viewInventory(inventory); break;
+            case 5: searchByID(inventory);    break;
+            case 6: cout << "Goodbye!" << '\n'; break;
+            default: cout << "Invalid choice. Please enter a number from 1 to 6." << '\n';
+        }
+    } while (choice != 6);
 
     return 0;
 }
