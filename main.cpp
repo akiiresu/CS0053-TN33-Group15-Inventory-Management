@@ -376,8 +376,8 @@ int main() {
 
         switch (choice) {
             case 1: addItem(FILENAME, inventory);       break;
-            case 2: updateItem();    break;
-            case 3: deleteItem();    break;
+            case 2: updateItem(FILENAME, inventory); break;
+            case 3: deleteItem(FILENAME, inventory); break;
             case 4: viewInventory(inventory); break;
             case 5: searchByID();    break;
             case 6: cout << "Goodbye!" << '\n'; break;
