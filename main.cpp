@@ -245,47 +245,81 @@ void updateItem(string filename, vector<squishyData>& inventory) {
         return;
     }
 
-    // Display current details
-    cout << "\nItem found! Current details:" << '\n';
-    cout << "Type: " << inventory[index].getType() << '\n';
-    cout << "Name: " << inventory[index].getName() << '\n';
-    cout << "Quantity: " << inventory[index].getQuantity() << '\n';
-    cout << "Price: " << inventory[index].getPrice() << '\n';
+    int choice = 0;
+    do {
+        cout << "\nCurrent details (Item ID: " << id << "):" << '\n';
+        cout << "Type: " << inventory[index].getType() << '\n';
+        cout << "Name: " << inventory[index].getName() << '\n';
+        cout << "Quantity: " << inventory[index].getQuantity() << '\n';
+        cout << "Price: " << inventory[index].getPrice() << '\n';
 
-    // Get new values
-    string type;
-    int quantity;
-    double price;
+        cout << "\nWhat would you like to update?\n";
+        cout << "1. Squishy Type\n";
+        cout << "2. Stocks Available\n";
+        cout << "3. Price\n";
+        cout << "4. Go Back\n";
+        cout << "Enter choice (1-4): ";
 
-    cout << "Enter new Item Type: ";
-    getline(cin, type);
-
-    cout << "Enter new Item Quantity: ";
-    while (!(cin >> quantity) || quantity < 0) {
-        cin.clear();
+        if (!(cin >> choice)) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Invalid input! Please enter a number from 1 to 4.\n";
+            choice = 0;
+            continue;
+        }
         cin.ignore(10000, '\n');
-        cout << "Invalid input. Enter a valid quantity: ";
-    }
 
-    cout << "Enter new Item Price: ";
-    while (!(cin >> price) || price < 0) {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Invalid input. Enter a valid price: ";
-    }
-    cin.ignore(10000, '\n'); // Clear the input buffer
+        switch (choice) {
+            case 1: {
+                string type;
+                cout << "Enter new Squishy Type: ";
+                getline(cin, type);
+                inventory[index].setType(type);
+                break;
+            }
+            case 2: {
+                int quantity;
+                cout << "Enter new stocks available: ";
+                while (!(cin >> quantity) || quantity < 0) {
+                    cin.clear();
+                    cin.ignore(10000, '\n');
+                    cout << "Invalid input. Enter a valid number.\n";
+                    cout << "Enter new stocks available: ";
+                }
+                cin.ignore(10000, '\n');
+                inventory[index].setQuantity(quantity);
+                break;
+            }
+            case 3: {
+                double price;
+                cout << "Enter new Squishy price: ";
+                while (!(cin >> price) || price < 0) {
+                    cin.clear();
+                    cin.ignore(10000, '\n');
+                    cout << "Invalid input. Enter a valid price.\n";
+                    cout << "Enter new Squishy price: ";
+                }
+                cin.ignore(10000, '\n');
+                inventory[index].setPrice(price);
+                break;
+            }
+            case 4:
+                break;
+            default:
+                cout << "Invalid choice! Please enter a number from 1 to 4.\n";
+                continue; // this is for skipping the save para there's no unintentional updates
+        }
 
-    // Update the object inside the vector
-    inventory[index].setType(type);
-    inventory[index].setQuantity(quantity);
-    inventory[index].setPrice(price);
+        // Save lang pag may na-update talaga
+        if (choice >= 1 && choice <= 3) {
+            if (updateFile(filename, inventory)) {
+                cout << "Item updated successfully!" << '\n';
+            } else {
+                cout << "Error: Could not save changes to file." << '\n';
+            }
+        }
 
-    // Save changes to the text file
-    if (updateFile(filename, inventory)) {
-        cout << "Item updated successfully!" << '\n';
-    } else {
-        cout << "Error: Could not save changes to file." << '\n';
-    }
+    } while (choice != 4);
 }
 
 void deleteItem(string filename, vector<squishyData>& inventory) {
