@@ -132,8 +132,8 @@ bool updateFile(string filename, const vector<squishyData>& items) {
 // Function Prototypes
 void displayMenu();
 void addItem(string filename, vector<squishyData>& inventory);
-void updateItem();
-void deleteItem();
+void updateItem(string filename, vector<squishyData>& inventory);
+void deleteItem(string filename, vector<squishyData>& inventory);
 void viewInventory(const vector<squishyData>& inventory);
 
 void displayMenu() {
@@ -262,7 +262,7 @@ void updateItem(string filename, vector<squishyData>& inventory) {
         cin.ignore(10000, '\n');
         cout << "Invalid input. Enter a valid price: ";
     }
-    cin.ignore(10000, '\n'); // Clear newline left in buffer
+    cin.ignore(10000, '\n'); // Clear the input buffer
 
     // Update the object inside the vector
     inventory[index].setType(type);
