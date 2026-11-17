@@ -476,6 +476,8 @@ int main() {
             continue;
         }
 
+        cin.ignore(10000, '\n'); 
+
         switch (choice) {
             case 1: addItem(FILENAME, inventory);       break;
             case 2: updateItem(FILENAME, inventory);    break;
