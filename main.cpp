@@ -226,8 +226,6 @@ void updateItem(string filename, vector<squishyData>& inventory) {
     }
 
     string id;
-    cin.clear();
-    cin.ignore(10000, '\n');
     cout << "\n--- Update Item ---" << '\n';
     cout << "Enter Item ID to update: ";
     getline(cin, id);
@@ -344,6 +342,8 @@ void deleteItem(string filename, vector<squishyData>& inventory) {
 
     if (index == -1) {
         cout << "Item with ID '" << id << "' not found." << '\n';
+        cout << "Press Enter to return to the main menu...";
+        cin.get();
         return;
     }
 
@@ -364,32 +364,34 @@ void viewInventory(const vector<squishyData>& inventory) {
     if (inventory.empty()) {
         cout << "Inventory is empty." << '\n';
         return;
-    }
+    } else {
+        cout << "------------------------------------------------------------------------------------------------" << '\n';
+        cout << left  << setw(12) << "ID"
+            << left  << setw(20) << "Type"
+            << left  << setw(40) << "Name"
+            << right << setw(10) << "Quantity"
+            << right << setw(12) << "Price" << '\n';
+        cout << "------------------------------------------------------------------------------------------------" << '\n';
 
-    cout << "------------------------------------------------------------------------------------------------" << '\n';
-    cout << left  << setw(12) << "ID"
-         << left  << setw(20) << "Type"
-         << left  << setw(40) << "Name"
-         << right << setw(10) << "Quantity"
-         << right << setw(12) << "Price" << '\n';
-    cout << "------------------------------------------------------------------------------------------------" << '\n';
-
-    cout << fixed << setprecision(2);
-    for (const squishyData& item : inventory) {
-        cout << left  << setw(12) << item.getID()
-             << left  << setw(20) << item.getType()
-             << left  << setw(40) << item.getName()
-             << right << setw(10) << item.getQuantity()
-             << right << setw(12) << item.getPrice() << '\n';
+        cout << fixed << setprecision(2);
+        for (const squishyData& item : inventory) {
+            cout << left  << setw(12) << item.getID()
+                << left  << setw(20) << item.getType()
+                << left  << setw(40) << item.getName()
+                << right << setw(10) << item.getQuantity()
+                << right << setw(12) << item.getPrice() << '\n';
+        }
+        cout << "------------------------------------------------------------------------------------------------" << '\n';
     }
-    cout << "------------------------------------------------------------------------------------------------" << '\n';
+    cout << "Press Enter to return to the main menu...";
+    cin.get();
 }
 
 // Search Engine
 // =============================
 void searchByID(const vector<squishyData>& items) {
     bool searchID = true;
-    cout << "\n\t\t || SEARCH INVENTORY || \n" << endl;
+    cout << "\n--- Search Inventory ---" << '\n';
     while (searchID) {
         string searchIDInput;
         char searchChoice;
@@ -475,6 +477,8 @@ int main() {
             cout << "Invalid input. Please enter a number from 1 to 6." << '\n';
             continue;
         }
+
+        cin.ignore(10000, '\n'); 
 
         switch (choice) {
             case 1: addItem(FILENAME, inventory);       break;
