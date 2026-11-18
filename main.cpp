@@ -5,6 +5,7 @@
 #include <string>
 #include <iomanip>
 #include <cctype>
+#include <unistd.h>
 
 using namespace std;
 
@@ -151,11 +152,11 @@ void displayMenu() {
     cout << "\n=============================" << '\n';
     cout << "Squishy Inventory Management" << '\n';
     cout << "=============================" << '\n';
-    cout << "1. Add Item" << '\n';
-    cout << "2. Update Item" << '\n';
-    cout << "3. Delete Item" << '\n';
+    cout << "1. Add Squishy" << '\n';
+    cout << "2. Update Squishy Details" << '\n';
+    cout << "3. Delete Squishy" << '\n';
     cout << "4. View Inventory" << '\n';
-    cout << "5. Search Item by ID" << '\n';
+    cout << "5. Search Squishy by Item ID" << '\n';
     cout << "6. Exit" << '\n';
     cout << "=============================" << '\n';
 }
@@ -165,7 +166,7 @@ void addItem(string filename, vector<squishyData>& inventory){
     int quantity;
     double price;
 
-    cout << "\n--- Add Item ---" << '\n';
+    cout << "\n--- Add Squishy ---" << '\n';
 
     // Get unique ID
     while (true) {
@@ -189,20 +190,20 @@ void addItem(string filename, vector<squishyData>& inventory){
         }
     }
 
-    cout << "Enter Item Type: ";
+    cout << "Enter Squishy Type: ";
     getline(cin, type);
 
-    cout << "Enter Item Name: ";
+    cout << "Enter Squishy Name: ";
     getline(cin, name);
 
-    cout << "Enter Item Quantity: ";
+    cout << "Enter Squishy Item Quantity: ";
     while (!(cin >> quantity) || quantity < 0) {
         cin.clear();
         cin.ignore(10000, '\n');
         cout << "Invalid input. Enter a valid quantity: ";
     }
 
-    cout << "Enter Item Price: ";
+    cout << "Enter Squishy Price: ";
     while (!(cin >> price) || price < 0) {
         cin.clear();
         cin.ignore(10000, '\n');
@@ -214,19 +215,19 @@ void addItem(string filename, vector<squishyData>& inventory){
 
     if (appendFile(filename, newItem)) {
         inventory.push_back(newItem);
-        cout << "Item added successfully!" << '\n';
+        cout << "Squishy added successfully!" << '\n';
     }
 }
 
 void updateItem(string filename, vector<squishyData>& inventory) {
     if (inventory.empty()) {
-        cout << "\n--- Update Item ---" << '\n';
+        cout << "\n--- Update Squishy Details ---" << '\n';
         cout << "Inventory is empty. Nothing to update." << '\n';
         return;
     }
 
     string id;
-    cout << "\n--- Update Item ---" << '\n';
+    cout << "\n--- Update Squishy Details ---" << '\n';
     cout << "Enter Item ID to update: ";
     getline(cin, id);
 
@@ -486,7 +487,11 @@ int main() {
             case 3: deleteItem(FILENAME, inventory);    break;
             case 4: viewInventory(inventory); break;
             case 5: searchByID(inventory);    break;
-            case 6: cout << "Goodbye!" << '\n'; break;
+            case 6: 
+                cout << "Thank you for using the Squishy Inventory Manager!" << '\n';
+                cout << "Exiting the program..." << '\n';
+                sleep(2);
+                break;
             default: cout << "Invalid choice. Please enter a number from 1 to 6." << '\n';
         }
     } while (choice != 6);
