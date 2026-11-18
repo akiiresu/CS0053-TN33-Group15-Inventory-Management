@@ -456,7 +456,11 @@ int main() {
     const string FILENAME = "inventory.txt";
     vector<squishyData> inventory;
 
-    readFile(FILENAME, inventory);
+    if (!readFile(FILENAME, inventory) || inventory.empty()) {
+        squishyInventory defaultInventory;
+        inventory = defaultInventory.defaultItems;
+        updateFile(FILENAME, inventory);
+    }
 
     int choice = 0;
     do {
