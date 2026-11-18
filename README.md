@@ -76,8 +76,8 @@ Press Enter to return to the main menu...
 ```
 
 ## Roles & System Outline
-Programming Language: C++
-Compiler: GCC/G++
+Programming Language: C++\
+Compiler: GCC/G++\
 IDE: Any (Preferably Visual Studio Code)
 
 **1. Data Management (OOP) - Oblan**\
