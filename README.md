@@ -11,6 +11,8 @@ A simple and lightweight C++ program that is designed to manage a collection of 
     
 * View Inventory
 
+* Search by ID
+
 ### Group Members
 * Butaslac, Nj
 
